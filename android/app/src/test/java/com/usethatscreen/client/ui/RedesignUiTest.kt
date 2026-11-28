@@ -119,6 +119,18 @@ class RedesignUiTest {
     @Test
     fun usbActivityShowsAllStepsUnconditionallyAndExpandsManualAdbCommand() {
         val activity = Robolectric.buildActivity(UsbActivity::class.java).setup().get()
+        assertEquals(activity.getString(R.string.usb_status_waiting), activity.findViewById<TextView>(R.id.usb_status_title).text.toString())
+        assertEquals(View.GONE, activity.findViewById<View>(R.id.btn_start_service).visibility)
+
+        SessionHub.update { Status(phase = Phase.STOPPED, lastError = "Port 47820 is in use") }
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals("Port 47820 is in use", activity.findViewById<TextView>(R.id.usb_status_detail).text.toString())
+        assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.btn_start_service).visibility)
+
+        SessionHub.update { Status(phase = Phase.CONNECTED, hostName = "Workstation-PC", link = Proto.LINK_LOOPBACK, mode = Proto.MODE_NONE) }
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.btn_open_display).visibility)
+        assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.btn_disconnect).visibility)
 
         assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.btn_open_about_device).visibility)
         assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.btn_open_dev_options).visibility)

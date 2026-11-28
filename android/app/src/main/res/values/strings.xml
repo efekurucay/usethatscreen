@@ -39,6 +39,8 @@
     <string name="connect_pc_enter_address">Enter PC address</string>
     <string name="connect_pc_busy">Disconnect the current session before connecting to another PC.</string>
     <string name="usb_screen_title">Connect via USB</string>
+    <string name="usb_status_waiting">Ready for USB</string>
+    <string name="usb_status_waiting_detail">Listening on port 47820. Plug in your cable and start Use That Screen on your computer.</string>
     <string name="usb_setup_title">USB setup steps</string>
     <string name="usb_setup_intro">Use That Screen connects automatically over USB once USB debugging is turned on.</string>
     <string name="usb_step1_title">Unlock Developer options</string>

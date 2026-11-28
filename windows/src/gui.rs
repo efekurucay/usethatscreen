@@ -505,6 +505,9 @@ mod app {
                 .unwrap_or_default();
 
             for d in devices {
+                if d.is_network_transport() {
+                    continue;
+                }
                 let key = format!("usb:{}", d.serial);
                 if self.sessions.contains_key(&key) {
                     continue;

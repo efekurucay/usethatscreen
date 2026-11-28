@@ -12,6 +12,18 @@ pub struct UsbDevice {
     pub model: Option<String>,
 }
 
+impl UsbDevice {
+    pub fn is_network_transport(&self) -> bool {
+        self.serial
+            .rsplit_once(':')
+            .is_some_and(|(host, port)| !host.is_empty() && port.parse::<u16>().is_ok())
+            || self
+                .serial
+                .trim_end_matches('.')
+                .ends_with("._adb-tls-connect._tcp")
+    }
+}
+
 pub struct Adb {
     pub path: PathBuf,
 }
@@ -169,6 +181,20 @@ mod tests {
                 model: Some("9469X".into())
             }]
         );
+    }
+
+    #[test]
+    fn identifies_network_transports_in_device_list() {
+        let out = "192.168.1.25:5555 device product:fire_tv\n\
+                   [fe80::12]:5555 device product:fire_tv\n\
+                   adb-ABC123-abc._adb-tls-connect._tcp. device model:Pixel\n\
+                   R58N12345 device usb:1-1 model:Galaxy\n\
+                   (no serial number) device model:TCL\n";
+        let network_transports: Vec<_> = parse_devices(out)
+            .into_iter()
+            .map(|device| device.is_network_transport())
+            .collect();
+        assert_eq!(network_transports, [true, true, true, false, false]);
     }
 
     #[test]

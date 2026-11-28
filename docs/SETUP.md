@@ -59,6 +59,9 @@ It mirrors an existing monitor unless you install the optional
    automatically by default. On Windows, select the device under **USB** in Use That Screen or run
    the USB command above.
 
+Windows automatic USB connection skips devices using ADB over the network. For a Fire TV Stick
+on the network, use the Wi-Fi connection below.
+
 For a device listed as `(no serial number)`, connect only one USB Android device at a time.
 This case is supported on both hosts starting with v0.1.1. USB uses the existing ADB
 computer authorization; it does not show the Wi-Fi pairing code.

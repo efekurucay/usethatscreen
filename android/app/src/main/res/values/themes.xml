@@ -1,19 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.UseThatScreen" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/brand</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="colorPrimaryContainer">#E7DEFF</item>
-        <item name="colorOnPrimaryContainer">#22005D</item>
-        <item name="colorSecondaryContainer">#E6DFF6</item>
-        <item name="colorOnSecondaryContainer">#1E192B</item>
+        <item name="colorPrimary">@color/brand_accent</item>
+        <item name="colorOnPrimary">@color/brand_on_accent</item>
+        <item name="colorPrimaryContainer">@color/brand_highlight</item>
+        <item name="colorOnPrimaryContainer">@color/brand_on_highlight</item>
+
+        <item name="colorSecondary">@color/brand_forest</item>
+        <item name="colorOnSecondary">@color/brand_on_forest</item>
+        <item name="colorSecondaryContainer">@color/brand_surface_high</item>
+        <item name="colorOnSecondaryContainer">@color/brand_ink</item>
+
+        <item name="android:colorBackground">@color/brand_canvas</item>
+        <item name="android:windowBackground">@color/brand_canvas</item>
+        <item name="colorSurface">@color/brand_canvas</item>
+        <item name="elevationOverlayColor">@android:color/transparent</item>
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="colorSurfaceContainerLowest">@color/brand_canvas</item>
+        <item name="colorSurfaceContainerLow">@color/brand_surface</item>
+        <item name="colorSurfaceContainer">@color/brand_surface</item>
+        <item name="colorSurfaceContainerHigh">@color/brand_surface_high</item>
+        <item name="colorSurfaceContainerHighest">@color/brand_surface_high</item>
+        <item name="colorSurfaceVariant">@color/brand_surface</item>
+        <item name="colorOnBackground">@color/brand_ink</item>
+        <item name="colorOnSurface">@color/brand_ink</item>
+        <item name="colorOnSurfaceVariant">@color/brand_body</item>
+        <item name="colorOutline">@color/brand_outline</item>
+        <item name="colorOutlineVariant">@color/brand_hairline</item>
+
+        <item name="colorError">@color/brand_error</item>
+        <item name="colorErrorContainer">@color/brand_error_bg</item>
+        <item name="colorOnErrorContainer">@color/brand_on_error_bg</item>
+
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="statusOk">@color/ok</item>
+
+        <item name="materialButtonOutlinedStyle">@style/Widget.UseThatScreen.Button.Outlined</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.UseThatScreen.AlertDialog</item>
+    </style>
+
+    <style name="Widget.UseThatScreen.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/brand_accent_text</item>
+        <item name="iconTint">@color/brand_accent_text</item>
+        <item name="strokeColor">@color/brand_outline</item>
+    </style>
+
+    <style name="Widget.UseThatScreen.Button.DialogText" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/brand_accent_text</item>
+    </style>
+
+    <style name="ThemeOverlay.UseThatScreen.AlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurfaceContainerHigh">@color/brand_surface</item>
+        <item name="colorSurface">@color/brand_surface</item>
+        <item name="elevationOverlayColor">@android:color/transparent</item>
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="colorPrimary">@color/brand_accent_text</item>
+        <item name="colorOnSurface">@color/brand_ink</item>
+        <item name="colorOnSurfaceVariant">@color/brand_body</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.UseThatScreen.Button.DialogText</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.UseThatScreen.Button.DialogText</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.UseThatScreen.Button.DialogText</item>
     </style>
 
     <style name="Theme.UseThatScreen.Stream" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="colorPrimary">@color/brand_dark</item>
+        <item name="colorPrimary">@color/brand_accent</item>
         <item name="android:windowBackground">@android:color/black</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:navigationBarColor">@android:color/black</item>
@@ -27,9 +79,31 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="Widget.UseThatScreen.Card" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/brand_surface</item>
+        <item name="strokeColor">@color/brand_hairline</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="Widget.UseThatScreen.Card.Highlight" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/brand_highlight</item>
+        <item name="strokeColor">@color/brand_highlight_border</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="Widget.UseThatScreen.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/brand_canvas</item>
+        <item name="titleTextColor">@color/brand_ink</item>
+        <item name="navigationIconTint">@color/brand_ink</item>
+    </style>
+
     <style name="TextAppearance.UseThatScreen.Code" parent="TextAppearance.Material3.DisplayMedium">
         <item name="android:fontFamily">monospace</item>
-        <item name="android:letterSpacing">0.08</item>
+        <item name="android:letterSpacing">0.1</item>
         <item name="android:textStyle">bold</item>
     </style>
 </resources>

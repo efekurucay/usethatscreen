@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Use That Screen brand tokens (Dark: obsidian, elevated charcoal, deep forest/lime, burnt orange) -->
+    <color name="brand_canvas">#0F0F0F</color>
+    <color name="brand_surface">#1B1B1B</color>
+    <color name="brand_surface_high">#242422</color>
+    <color name="brand_code_well">#131313</color>
+    <color name="brand_hairline">#323230</color>
+    <color name="brand_outline">#6B6E66</color>
+
+    <color name="brand_ink">#F6F6F6</color>
+    <color name="brand_body">#C5C9BF</color>
+    <color name="brand_muted">#9A9E95</color>
+
+    <color name="brand_accent_text">#F07C56</color>
+    <color name="brand_accent">#C74B29</color>
+    <color name="brand_on_accent">#FFFFFF</color>
+
+    <color name="brand_highlight">#253E34</color>
+    <color name="brand_highlight_border">#406354</color>
+    <color name="brand_on_highlight">#D9ED9D</color>
+
+    <color name="brand_forest">#D9ED9D</color>
+    <color name="brand_on_forest">#242820</color>
+
+    <color name="brand_error">#F28B72</color>
+    <color name="brand_error_bg">#331B15</color>
+    <color name="brand_on_error_bg">#F5B8A8</color>
+</resources>

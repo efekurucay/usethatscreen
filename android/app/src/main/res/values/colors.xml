@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="brand">#6A4FD8</color>
-    <color name="brand_dark">#CDBDFF</color>
+    <!-- Use That Screen brand tokens (Light: warm cream, obsidian ink, forest/lime, burnt orange) -->
+    <color name="brand_canvas">#F5F3EC</color>
+    <color name="brand_surface">#EBECE2</color>
+    <color name="brand_surface_high">#E2E4D7</color>
+    <color name="brand_code_well">#E2E4D7</color>
+    <color name="brand_hairline">#D7D8CB</color>
+    <color name="brand_outline">#8E9384</color>
+
+    <color name="brand_ink">#242820</color>
+    <color name="brand_body">#555F4C</color>
+    <color name="brand_muted">#5D6656</color>
+
+    <color name="brand_accent_text">#B84221</color>
+    <color name="brand_accent">#C74B29</color>
+    <color name="brand_on_accent">#FFFFFF</color>
+
+    <color name="brand_highlight">#D9ED9D</color>
+    <color name="brand_highlight_border">#CAD6B6</color>
+    <color name="brand_on_highlight">#242820</color>
+
+    <color name="brand_forest">#253E34</color>
+    <color name="brand_on_forest">#FFFFFF</color>
+
+    <color name="brand_error">#C74B29</color>
+    <color name="brand_error_bg">#F8E6E0</color>
+    <color name="brand_on_error_bg">#8C2D14</color>
+
     <color name="overlay_scrim">#B3000000</color>
-    <color name="ok">#2E7D32</color>
-    <color name="ok_dark">#81C784</color>
+    <color name="ok">#253E34</color>
+    <color name="ok_dark">#D9ED9D</color>
 </resources>

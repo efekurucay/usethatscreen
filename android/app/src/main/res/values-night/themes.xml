@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.UseThatScreen" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/brand_dark</item>
-        <item name="colorOnPrimary">#36198F</item>
-        <item name="colorPrimaryContainer">#5134BD</item>
-        <item name="colorOnPrimaryContainer">#E7DEFF</item>
+        <item name="colorPrimary">@color/brand_accent</item>
+        <item name="colorOnPrimary">@color/brand_on_accent</item>
+        <item name="colorPrimaryContainer">@color/brand_highlight</item>
+        <item name="colorOnPrimaryContainer">@color/brand_on_highlight</item>
+
+        <item name="colorSecondary">@color/brand_forest</item>
+        <item name="colorOnSecondary">@color/brand_on_forest</item>
+        <item name="colorSecondaryContainer">@color/brand_surface_high</item>
+        <item name="colorOnSecondaryContainer">@color/brand_ink</item>
+
+        <item name="android:colorBackground">@color/brand_canvas</item>
+        <item name="android:windowBackground">@color/brand_canvas</item>
+        <item name="colorSurface">@color/brand_canvas</item>
+        <item name="elevationOverlayColor">@android:color/transparent</item>
+        <item name="elevationOverlayEnabled">false</item>
+        <item name="colorSurfaceContainerLowest">@color/brand_canvas</item>
+        <item name="colorSurfaceContainerLow">@color/brand_surface</item>
+        <item name="colorSurfaceContainer">@color/brand_surface</item>
+        <item name="colorSurfaceContainerHigh">@color/brand_surface_high</item>
+        <item name="colorSurfaceContainerHighest">@color/brand_surface_high</item>
+        <item name="colorSurfaceVariant">@color/brand_surface</item>
+        <item name="colorOnBackground">@color/brand_ink</item>
+        <item name="colorOnSurface">@color/brand_ink</item>
+        <item name="colorOnSurfaceVariant">@color/brand_body</item>
+        <item name="colorOutline">@color/brand_outline</item>
+        <item name="colorOutlineVariant">@color/brand_hairline</item>
+
+        <item name="colorError">@color/brand_error</item>
+        <item name="colorErrorContainer">@color/brand_error_bg</item>
+        <item name="colorOnErrorContainer">@color/brand_on_error_bg</item>
+
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="statusOk">@color/ok_dark</item>
+
+        <item name="materialButtonOutlinedStyle">@style/Widget.UseThatScreen.Button.Outlined</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.UseThatScreen.AlertDialog</item>
     </style>
 </resources>

@@ -60,7 +60,7 @@ abstract class BaseActivity : AppCompatActivity(), SessionHub.Listener {
             .setView(view)
             .setCancelable(false)
             .setNegativeButton(R.string.reject) { _, _ -> request.answer(false) }
-            .setPositiveButton(R.string.accept) { _, _ -> request.answer(true) }
+            .setPositiveButton(R.string.codes_match) { _, _ -> request.answer(true) }
             .show()
     }
 

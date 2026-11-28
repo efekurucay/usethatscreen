@@ -50,6 +50,7 @@ android {
     }
 
     testOptions {
+        unitTests.isIncludeAndroidResources = true
         unitTests.all {
             it.systemProperty("usethatscreen.vectors", rootProject.file("../tools/vectors.json").absolutePath)
         }

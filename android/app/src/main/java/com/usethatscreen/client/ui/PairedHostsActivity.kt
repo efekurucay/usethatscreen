@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -36,9 +35,12 @@ class PairedHostsActivity : BaseActivity() {
         }
         store = PairedHosts(this)
         val content = findViewById<FrameLayout>(R.id.content)
+        val horizontalPad = resources.getDimensionPixelSize(R.dimen.screen_horizontal_padding)
+        val verticalPad = (12 * resources.displayMetrics.density).toInt()
         list = RecyclerView(this).apply {
             layoutManager = LinearLayoutManager(this@PairedHostsActivity)
-            addItemDecoration(DividerItemDecoration(this@PairedHostsActivity, DividerItemDecoration.VERTICAL))
+            clipToPadding = false
+            setPadding(horizontalPad, verticalPad, horizontalPad, verticalPad)
             adapter = Adapter()
         }
         empty = TextView(this).apply {
@@ -47,6 +49,7 @@ class PairedHostsActivity : BaseActivity() {
             val pad = (32 * resources.displayMetrics.density).toInt()
             setPadding(pad, pad, pad, pad)
             setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodyLarge)
+            setTextColor(getColor(R.color.brand_body))
         }
         content.addView(list)
         content.addView(empty)

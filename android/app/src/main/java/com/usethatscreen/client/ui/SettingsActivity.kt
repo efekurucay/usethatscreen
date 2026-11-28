@@ -46,6 +46,18 @@ class SettingsActivity : BaseActivity() {
             }
         }
 
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+            if (resources.getBoolean(R.bool.wide_layout)) {
+                val extra = resources.getDimensionPixelSize(R.dimen.screen_horizontal_padding) -
+                    (16 * resources.displayMetrics.density).toInt()
+                if (extra > 0) {
+                    listView.clipToPadding = false
+                    listView.setPadding(extra, listView.paddingTop, extra, listView.paddingBottom)
+                }
+            }
+        }
+
         override fun onResume() {
             super.onResume()
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)

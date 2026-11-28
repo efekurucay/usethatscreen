@@ -4,22 +4,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingHorizontal="24dp"
-    android:paddingTop="8dp">
+    android:paddingTop="8dp"
+    android:paddingBottom="4dp">
 
     <TextView
         android:id="@+id/pairing_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceBodyMedium" />
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnSurfaceVariant" />
 
     <TextView
         android:id="@+id/pairing_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@drawable/bg_code"
+        android:background="@drawable/bg_pairing_code"
         android:gravity="center"
-        android:paddingVertical="16dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="18dp"
         android:textAppearance="@style/TextAppearance.UseThatScreen.Code"
-        android:textColor="?attr/colorOnPrimaryContainer" />
+        android:textColor="@color/brand_on_highlight" />
 </LinearLayout>

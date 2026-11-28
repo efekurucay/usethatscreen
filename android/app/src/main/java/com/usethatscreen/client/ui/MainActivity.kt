@@ -1,32 +1,24 @@
 package com.usethatscreen.client.ui
 
 import android.Manifest
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.text.InputType
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.usethatscreen.client.BuildConfig
 import com.usethatscreen.client.R
 import com.usethatscreen.client.data.Identity
-import com.usethatscreen.client.data.PcConnection
-import com.usethatscreen.client.data.PcConnections
-import com.usethatscreen.client.data.parsePcAddress
+import com.usethatscreen.client.data.PairedHosts
 import com.usethatscreen.client.device.DeviceCaps
 import com.usethatscreen.client.protocol.Proto
 import com.usethatscreen.client.session.ConnectionService
@@ -38,46 +30,52 @@ class MainActivity : BaseActivity() {
     private lateinit var statusIcon: ImageView
     private lateinit var statusProgress: CircularProgressIndicator
     private lateinit var statusTitle: TextView
+    private lateinit var statusPill: TextView
     private lateinit var statusDetail: TextView
     private lateinit var statusError: TextView
+    private lateinit var statusActions: View
     private lateinit var btnOpen: Button
     private lateinit var btnDisconnect: Button
     private lateinit var btnStart: Button
-    private lateinit var wifiAddress: TextView
-    private val pcConnections by lazy { PcConnections(this) }
+    private lateinit var wifiSummary: TextView
+    private lateinit var pairedSummary: TextView
+    private val pairedHosts by lazy { PairedHosts(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val root = findViewById<View>(R.id.root)
-        ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
-            insets
-        }
+        insetRoot(findViewById(R.id.root))
+
         findViewById<MaterialToolbar>(R.id.toolbar).setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.action_settings -> startActivity(Intent(this, SettingsActivity::class.java))
-                R.id.action_paired -> startActivity(Intent(this, PairedHostsActivity::class.java))
-                R.id.action_connect_pc -> showConnectPc()
             }
             true
         }
+
         statusIcon = findViewById(R.id.status_icon)
         statusProgress = findViewById(R.id.status_progress)
         statusTitle = findViewById(R.id.status_title)
+        statusPill = findViewById(R.id.status_pill)
         statusDetail = findViewById(R.id.status_detail)
         statusError = findViewById(R.id.status_error)
+        statusActions = findViewById(R.id.status_actions)
         btnOpen = findViewById(R.id.btn_open)
         btnDisconnect = findViewById(R.id.btn_disconnect)
         btnStart = findViewById(R.id.btn_start)
-        wifiAddress = findViewById(R.id.wifi_address)
+        wifiSummary = findViewById(R.id.wifi_summary)
+        pairedSummary = findViewById(R.id.paired_summary)
+
+        configureResponsiveChoiceGrid()
+
         btnOpen.setOnClickListener { startActivity(Intent(this, StreamActivity::class.java)) }
         btnDisconnect.setOnClickListener { SessionHub.session?.disconnect() }
         btnStart.setOnClickListener { ConnectionService.start(this) }
-        findViewById<TextView>(R.id.usb_command).setOnLongClickListener { copy(getString(R.string.usb_command)); true }
-        wifiAddress.setOnLongClickListener { copy(wifiAddress.text.toString()); true }
+        findViewById<View>(R.id.card_wifi).setOnClickListener { startActivity(Intent(this, WifiActivity::class.java)) }
+        findViewById<View>(R.id.card_usb).setOnClickListener { startActivity(Intent(this, UsbActivity::class.java)) }
+        findViewById<View>(R.id.card_paired).setOnClickListener { startActivity(Intent(this, PairedHostsActivity::class.java)) }
+
         findViewById<TextView>(R.id.footer).text =
             getString(R.string.device_footer, Identity(this).deviceIdHex.take(8), BuildConfig.VERSION_NAME)
 
@@ -91,91 +89,34 @@ class MainActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        refreshSummaries()
+    }
+
+    private fun configureResponsiveChoiceGrid() {
+        if (!resources.getBoolean(R.bool.wide_layout)) return
+        val grid = findViewById<LinearLayout>(R.id.choice_grid)
+        val wifiCard = findViewById<View>(R.id.card_wifi)
+        val usbCard = findViewById<View>(R.id.card_usb)
+        grid.orientation = LinearLayout.HORIZONTAL
+        wifiCard.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        usbCard.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+    }
+
+    private fun refreshSummaries() {
         val addresses = DeviceCaps.lanAddresses()
-        wifiAddress.text = if (addresses.isEmpty()) getString(R.string.wifi_none) else addresses.joinToString("\n") { "$it:${Proto.PORT}" }
-    }
-
-    private fun copy(text: String) {
-        (getSystemService(CLIPBOARD_SERVICE) as ClipboardManager).setPrimaryClip(ClipData.newPlainText(getString(R.string.app_name), text))
-        Toast.makeText(this, R.string.copied, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun showConnectPc() {
-        if (SessionHub.status.phase !in listOf(Phase.LISTENING, Phase.STOPPED)) return
-        val saved = pcConnections.list()
-        if (saved.isEmpty()) {
-            showPcAddressEntry()
-            return
+        if (addresses.isEmpty()) {
+            wifiSummary.setText(R.string.home_wifi_off)
+            wifiSummary.typeface = Typeface.DEFAULT
+        } else {
+            wifiSummary.text = "${addresses.first()}:${Proto.PORT}"
+            wifiSummary.typeface = Typeface.MONOSPACE
         }
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.connect_pc)
-            .setItems(pcConnectionLabels(saved)) { _, which ->
-                ConnectionService.connectPc(this, saved[which].address)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .setNeutralButton(R.string.manage_pc_connections) { _, _ -> managePcConnections() }
-            .setPositiveButton(R.string.new_pc_address) { _, _ -> showPcAddressEntry() }
-            .show()
-    }
 
-    private fun pcConnectionLabels(saved: List<PcConnection>): Array<String> = saved.map {
-        if (it.name == it.address) it.address else "${it.name}\n${it.address}"
-    }.toTypedArray()
-
-    private fun managePcConnections() {
-        val saved = pcConnections.list()
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.saved_pc_connections)
-            .setItems(pcConnectionLabels(saved)) { _, which -> editPcConnection(saved[which]) }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
-
-    private fun editPcConnection(entry: PcConnection) {
-        val name = EditText(this).apply {
-            hint = getString(R.string.pc_name_hint)
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-            setSingleLine()
-            setText(entry.name)
-            selectAll()
-        }
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.edit_pc_connection)
-            .setMessage(entry.address)
-            .setView(name)
-            .setNegativeButton(R.string.cancel, null)
-            .setNeutralButton(R.string.remove_pc_connection) { _, _ ->
-                pcConnections.remove(entry.address)
-                showConnectPc()
-            }
-            .setPositiveButton(R.string.save_pc_connection) { _, _ ->
-                pcConnections.rename(entry.address, name.text.toString().trim().ifEmpty { entry.address })
-                showConnectPc()
-            }
-            .show()
-    }
-
-    private fun showPcAddressEntry() {
-        val address = EditText(this).apply {
-            hint = getString(R.string.pc_address_hint)
-            inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_URI
-            setSingleLine()
-        }
-        val dialog = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.connect_pc)
-            .setMessage(R.string.connect_pc_detail)
-            .setView(address)
-            .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.connect_pc, null)
-            .show()
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-            val target = parsePcAddress(address.text.toString())?.hostAddress
-            if (target != null) {
-                ConnectionService.connectPc(this, target)
-                dialog.dismiss()
-            } else {
-                address.error = getString(R.string.pc_address_invalid)
-            }
+        val hosts = pairedHosts.list()
+        pairedSummary.text = when (hosts.size) {
+            0 -> getString(R.string.home_paired_none)
+            1 -> hosts.first().name.ifBlank { hosts.first().hostIdHex.take(8) }
+            else -> getString(R.string.home_paired_count, hosts.size)
         }
     }
 
@@ -187,32 +128,45 @@ class MainActivity : BaseActivity() {
         when (status.phase) {
             Phase.STOPPED -> {
                 statusTitle.setText(R.string.status_stopped)
+                statusPill.setText(R.string.status_pill_stopped)
                 statusDetail.text = status.lastError ?: getString(R.string.status_stopped_detail)
             }
             Phase.LISTENING -> {
                 statusTitle.setText(R.string.status_waiting)
+                statusPill.setText(R.string.status_pill_waiting)
                 statusDetail.setText(R.string.status_waiting_detail)
             }
             Phase.HANDSHAKE -> {
                 statusTitle.setText(R.string.status_handshake)
+                statusPill.setText(R.string.status_pill_connecting)
                 statusDetail.text = status.peer
             }
             Phase.PAIRING -> {
                 statusTitle.text = getString(R.string.status_pairing, status.hostName)
+                statusPill.setText(R.string.status_pill_pairing)
                 statusDetail.setText(R.string.status_pairing_detail)
             }
             Phase.CONNECTED -> {
                 statusTitle.text = getString(R.string.status_connected, status.hostName)
+                statusPill.setText(R.string.status_pill_connected)
                 val cfg = status.config
                 val stream = if (cfg != null) " · ${cfg.width}×${cfg.height} ${Proto.codecName(cfg.codec)} ${cfg.refreshHz} Hz" else ""
                 statusDetail.text = ConnectionService.linkLabel(this, status.link, status.mode) + stream
             }
         }
+        val positivePill = status.phase == Phase.LISTENING || status.phase == Phase.CONNECTED
+        statusPill.setBackgroundResource(if (positivePill) R.drawable.bg_status_pill else R.drawable.bg_status_pill_neutral)
+        statusPill.setTextColor(getColor(if (positivePill) R.color.brand_on_highlight else R.color.brand_body))
         val err = status.lastError
         statusError.visibility = if (err != null && status.phase == Phase.LISTENING) View.VISIBLE else View.GONE
         statusError.text = if (err != null) getString(R.string.last_error, err) else ""
-        btnOpen.visibility = if (status.phase == Phase.CONNECTED) View.VISIBLE else View.GONE
-        btnDisconnect.visibility = if (status.phase == Phase.CONNECTED) View.VISIBLE else View.GONE
-        btnStart.visibility = if (status.phase == Phase.STOPPED) View.VISIBLE else View.GONE
+
+        val showOpen = status.phase == Phase.CONNECTED
+        val showDisconnect = status.phase == Phase.CONNECTED
+        val showStart = status.phase == Phase.STOPPED
+        btnOpen.visibility = if (showOpen) View.VISIBLE else View.GONE
+        btnDisconnect.visibility = if (showDisconnect) View.VISIBLE else View.GONE
+        btnStart.visibility = if (showStart) View.VISIBLE else View.GONE
+        statusActions.visibility = if (showOpen || showDisconnect || showStart) View.VISIBLE else View.GONE
     }
 }

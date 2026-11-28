@@ -61,6 +61,16 @@
             android:parentActivityName=".ui.MainActivity" />
 
         <activity
+            android:name=".ui.WifiActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <activity
+            android:name=".ui.UsbActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <activity
             android:name=".ui.AccessoryActivity"
             android:excludeFromRecents="true"
             android:exported="true"

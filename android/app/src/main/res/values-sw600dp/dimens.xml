@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_horizontal_padding">56dp</dimen>
+    <dimen name="card_padding">24dp</dimen>
+    <dimen name="section_gap">18dp</dimen>
+    <dimen name="choice_card_gap">16dp</dimen>
+</resources>
